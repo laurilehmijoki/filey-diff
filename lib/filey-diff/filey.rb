@@ -15,6 +15,10 @@ module Filey
       @path + @name
     end
 
+    def <=> (another)
+      full_path <=> another.full_path
+    end
+
     class InvalidTimeError < Exception
     end
 
