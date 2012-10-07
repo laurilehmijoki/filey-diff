@@ -1,5 +1,8 @@
 # Filey diff
 
+[![Build Status](https://secure.travis-ci.org/laurilehmijoki/filey-diff.png)]
+(http://travis-ci.org/laurilehmijoki/filey-diff)
+
 A Ruby library for comparing file-like objects from various data sources.
 
 ## Central concepts
