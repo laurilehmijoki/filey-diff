@@ -1,5 +1,5 @@
 require 'rspec'
-require_relative '../lib/filey-diff'
+require File.dirname(__FILE__) + '/../lib/filey-diff'
 
 class S3Object
   attr_reader :key, :last_modified

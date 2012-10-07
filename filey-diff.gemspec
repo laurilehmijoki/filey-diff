@@ -15,6 +15,10 @@ Gem::Specification.new do |s|
 
   s.require_paths = %w[lib]
 
-  s.add_development_dependency('rake', "~> 0.9")
-  s.add_development_dependency('rspec', "~> 2.11")
+  if RUBY_VERSION < "1.9"
+    s.add_dependency 'require_relative', "~> 1.0.3"
+  end
+
+  s.add_development_dependency 'rake', "~> 0.9"
+  s.add_development_dependency 'rspec', "~> 2.11"
 end

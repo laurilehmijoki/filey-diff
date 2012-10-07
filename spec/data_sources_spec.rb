@@ -1,4 +1,4 @@
-require_relative 'spec_helper'
+require File.dirname(__FILE__) + '/spec_helper'
 
 shared_examples "a data source" do |source|
   let(:data_source) { described_class.new(source) }

@@ -1,5 +1,3 @@
-require 'find'
-
 module Filey
   module DataSources
     class FileSystem
@@ -9,7 +7,7 @@ module Filey
 
       def get_file_objects
         @cached if @cached
-        @cached = Find.find(@root_directory).select { |file|
+        @cached = Dir.glob(@root_directory + '/**/*').select { |file|
           File.file?(file)
         }.map { |file|
           path = file.scan(/(.*\/).*/).first.first.sub(@root_directory, '')
