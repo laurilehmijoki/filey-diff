@@ -6,8 +6,7 @@ module Filey
       end
 
       def get_fileys
-        @cached if @cached
-        @cached = Dir.glob(@root_directory + '/**/*').select { |file|
+        Dir.glob(@root_directory + '/**/*').select { |file|
           File.file?(file)
         }.map { |file|
           path = file.scan(/(.*\/).*/).first.first.sub(@root_directory, '')
