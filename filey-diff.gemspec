@@ -14,6 +14,8 @@ Gem::Specification.new do |s|
   s.homepage = 'http://github.com/laurilehmijoki/filey-diff'
 
   s.require_paths = %w[lib]
+  s.files         = `git ls-files`.split("\n")
+  s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
 
   if RUBY_VERSION < "1.9"
     s.add_dependency 'require_relative', "~> 1.0.3"
