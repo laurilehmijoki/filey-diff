@@ -5,7 +5,7 @@ module Filey
         @root_directory = root_directory
       end
 
-      def get_file_objects
+      def get_fileys
         @cached if @cached
         @cached = Dir.glob(@root_directory + '/**/*').select { |file|
           File.file?(file)

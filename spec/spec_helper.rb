@@ -23,7 +23,7 @@ class DataSource
     @file_objects = file_objects
   end
 
-  def get_file_objects
+  def get_fileys
     @file_objects
   end
 end

@@ -5,7 +5,7 @@ module Filey
         @s3_bucket = s3_bucket
       end
 
-      def get_file_objects
+      def get_fileys
         @cached if @cached
         @cached = @s3_bucket.objects.map { |s3_object|
           path = s3_object.key.scan(/(.*\/).*/).first.first
