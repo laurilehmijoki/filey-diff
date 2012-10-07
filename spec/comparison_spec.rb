@@ -2,10 +2,10 @@ require_relative 'spec_helper'
 
 describe Filey::Comparison do
   before {
-    @scifi = Filey::FileObject.new('./', 'scifi.txt', Time.now)
-    @deep_space = Filey::FileObject.new('./', 'abandoned.txt', Time.now)
-    @outdated_file_object = Filey::FileObject.new('./', 'foo.txt', Time.now - 10)
-    @latest_file_object = Filey::FileObject.new('./', 'foo.txt', Time.now)
+    @scifi = Filey::Filey.new('./', 'scifi.txt', Time.now)
+    @deep_space = Filey::Filey.new('./', 'abandoned.txt', Time.now)
+    @outdated_file_object = Filey::Filey.new('./', 'foo.txt', Time.now - 10)
+    @latest_file_object = Filey::Filey.new('./', 'foo.txt', Time.now)
   }
 
   context 'finding outdated files' do

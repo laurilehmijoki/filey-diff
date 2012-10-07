@@ -15,7 +15,7 @@ module Filey
           path = file.scan(/(.*\/).*/).first.first.sub(@root_directory, '')
           name = file.scan(/.*\/(.*)/).first.first
           normalised_path = ".#{path}"
-          Filey::FileObject.new(normalised_path, name, File.mtime(file))
+          Filey.new(normalised_path, name, File.mtime(file))
         }
       end
     end

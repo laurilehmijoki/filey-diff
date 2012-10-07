@@ -3,24 +3,24 @@ require_relative 'spec_helper'
 shared_examples "a data source" do |source|
   let(:data_source) { described_class.new(source) }
 
-  it 'normalises the objects into FileObjects' do
+  it 'normalises the objects into Fileys' do
     data_source.get_file_objects[0].path.should eq('./cameron/80s/')
     data_source.get_file_objects[0].name.should eq('aliens.txt')
   end
 
-  it 'normalises the objects into FileObjects' do
+  it 'normalises the objects into Fileys' do
     data_source.get_file_objects[1].path.should eq('./cameron/90s/')
     data_source.get_file_objects[1].name.should eq('t2.txt')
   end
 
-  it 'normalises the objects into FileObjects' do
+  it 'normalises the objects into Fileys' do
     data_source.get_file_objects[2].path.should eq('./')
     data_source.get_file_objects[2].name.should eq('movies.txt')
   end
 
-  it 'normalises the objects into FileObjects' do
+  it 'normalises the objects into Fileys' do
     data_source.get_file_objects.each { |file_object|
-      file_object.should be_an_instance_of(Filey::FileObject)
+      file_object.should be_an_instance_of(Filey::Filey)
     }
   end
 end

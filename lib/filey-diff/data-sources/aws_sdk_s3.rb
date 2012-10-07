@@ -11,7 +11,7 @@ module Filey
           path = s3_object.key.scan(/(.*\/).*/).first.first
           name = s3_object.key.scan(/.*\/(.*)/).first.first
           normalised_path = ".#{path}"
-          Filey::FileObject.new(normalised_path, name, s3_object.last_modified)
+          Filey.new(normalised_path, name, s3_object.last_modified)
         }
       end
     end

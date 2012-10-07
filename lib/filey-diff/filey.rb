@@ -1,5 +1,5 @@
 module Filey
-  class FileObject
+  class Filey
     attr_reader :path, :name, :last_modified
 
     def initialize(path, name, last_modified)
