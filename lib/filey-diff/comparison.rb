@@ -1,4 +1,4 @@
-module Diff
+module Filey
   class Comparison
     def self.list_outdated(data_source_a, data_source_b)
       data_source_b.get_file_objects.select { |b_item|

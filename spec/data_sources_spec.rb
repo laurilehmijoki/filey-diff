@@ -20,7 +20,7 @@ shared_examples "a data source" do |source|
 
   it 'normalises the objects into FileObjects' do
     data_source.get_file_objects.each { |file_object|
-      file_object.should be_an_instance_of(Diff::FileObject)
+      file_object.should be_an_instance_of(Filey::FileObject)
     }
   end
 end
@@ -31,14 +31,14 @@ objects = [
   { :path => '/movies.txt', :mtime => Time.now }
 ]
 
-describe Diff::DataSources::AwsSdkS3 do
+describe Filey::DataSources::AwsSdkS3 do
   s3_bucket = S3Bucket.new(
     objects.map { |object| S3Object.new(object[:path], object[:mtime]) }
   )
   it_should_behave_like "a data source", s3_bucket
 end
 
-describe Diff::DataSources::FileSystem do
+describe Filey::DataSources::FileSystem do
   require 'tmpdir'
   @directory = Dir.mktmpdir
   objects.each { |object|

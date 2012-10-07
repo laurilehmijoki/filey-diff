@@ -1,18 +1,18 @@
 require_relative 'spec_helper'
 
-describe Diff::Comparison do
+describe Filey::Comparison do
   before {
-    @scifi = Diff::FileObject.new('./', 'scifi.txt', Time.now)
-    @deep_space = Diff::FileObject.new('./', 'abandoned.txt', Time.now)
-    @outdated_file_object = Diff::FileObject.new('./', 'foo.txt', Time.now - 10)
-    @latest_file_object = Diff::FileObject.new('./', 'foo.txt', Time.now)
+    @scifi = Filey::FileObject.new('./', 'scifi.txt', Time.now)
+    @deep_space = Filey::FileObject.new('./', 'abandoned.txt', Time.now)
+    @outdated_file_object = Filey::FileObject.new('./', 'foo.txt', Time.now - 10)
+    @latest_file_object = Filey::FileObject.new('./', 'foo.txt', Time.now)
   }
 
   context 'finding outdated files' do
     before {
       data_source_a = DataSource.new([ @scifi, @latest_file_object ])
       data_source_b = DataSource.new([ @outdated_file_object, @deep_space ])
-      @outdated_file_objects = Diff::Comparison.list_outdated(data_source_a, data_source_b)
+      @outdated_file_objects = Filey::Comparison.list_outdated(data_source_a, data_source_b)
     }
 
     it 'lists the outdated files when comparing two data sources' do
@@ -28,7 +28,7 @@ describe Diff::Comparison do
     before {
       data_source_a = DataSource.new([ @deep_space ])
       data_source_b = DataSource.new([ @scifi ])
-      @missing_file_objects = Diff::Comparison.list_missing(data_source_a, data_source_b)
+      @missing_file_objects = Filey::Comparison.list_missing(data_source_a, data_source_b)
     }
 
     it 'lists the missing files when comparing two data sources' do

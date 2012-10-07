@@ -1,4 +1,4 @@
-module Diff
+module Filey
   module DataSources
     class AwsSdkS3
       def initialize(s3_bucket)
@@ -11,7 +11,7 @@ module Diff
           path = s3_object.key.scan(/(.*\/).*/).first.first
           name = s3_object.key.scan(/.*\/(.*)/).first.first
           normalised_path = ".#{path}"
-          Diff::FileObject.new(normalised_path, name, s3_object.last_modified)
+          Filey::FileObject.new(normalised_path, name, s3_object.last_modified)
         }
       end
     end

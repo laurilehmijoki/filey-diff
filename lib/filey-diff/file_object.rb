@@ -1,4 +1,4 @@
-module Diff
+module Filey
   class FileObject
     attr_reader :path, :name, :last_modified
 

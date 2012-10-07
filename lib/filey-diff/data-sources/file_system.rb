@@ -1,6 +1,6 @@
 require 'find'
 
-module Diff
+module Filey
   module DataSources
     class FileSystem
       def initialize(root_directory)
@@ -15,7 +15,7 @@ module Diff
           path = file.scan(/(.*\/).*/).first.first.sub(@root_directory, '')
           name = file.scan(/.*\/(.*)/).first.first
           normalised_path = ".#{path}"
-          Diff::FileObject.new(normalised_path, name, File.mtime(file))
+          Filey::FileObject.new(normalised_path, name, File.mtime(file))
         }
       end
     end
