@@ -9,8 +9,8 @@ A Ruby library for comparing file-like objects from various data sources.
 
 ### Filey
 
-A file-like object. Can be, for example, a *file system file* or an *AWS S3
-object*.
+A file-like object. Can be, for example, a file system file or an AWS S3
+object.
 
 ### Data source
 
