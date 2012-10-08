@@ -1,12 +1,18 @@
 require 'rspec'
+require 'digest/md5'
 require File.dirname(__FILE__) + '/../lib/filey-diff'
 
 class S3Object
   attr_reader :key, :last_modified
 
-  def initialize(key, last_modified)
+  def initialize(key, last_modified, content)
     @key = key
     @last_modified = last_modified
+    @content = content
+  end
+
+  def etag
+    Digest::MD5.hexdigest(@content)
   end
 end
 

@@ -17,7 +17,10 @@ module Filey
             name = s3_object.key
           end
           normalised_path = "./#{path}"
-          Filey.new(normalised_path, name, s3_object.last_modified)
+          Filey.new(normalised_path,
+                    name,
+                    s3_object.last_modified,
+                    s3_object.etag.gsub(/"/, ''))
         }
       end
     end

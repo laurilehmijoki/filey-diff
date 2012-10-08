@@ -9,6 +9,11 @@ shared_examples "a data source" do |source|
     filey.name.should eq('aliens.txt')
   end
 
+  it 'provides an md5 hash of the filey content' do
+    filey = data_source.get_fileys.sort[0]
+    filey.md5.should eq(Digest::MD5.hexdigest('Hudson'))
+  end
+
   it 'normalises the objects into Fileys' do
     filey = data_source.get_fileys.sort[1]
     filey.path.should eq('./cameron/90s/')
@@ -29,14 +34,19 @@ shared_examples "a data source" do |source|
 end
 
 objects = [
-  { :path => 'cameron/80s/aliens.txt', :mtime => Time.now },
-  { :path => 'cameron/90s/t2.txt', :mtime => Time.now },
-  { :path => 'movies.txt', :mtime => Time.now }
+  { :path => 'cameron/80s/aliens.txt', :mtime => Time.now,
+    :content => 'Hudson' },
+  { :path => 'cameron/90s/t2.txt', :mtime => Time.now,
+    :content => 't1000' },
+  { :path => 'movies.txt', :mtime => Time.now,
+    :content => 'foo' }
 ]
 
 describe Filey::DataSources::AwsSdkS3 do
   s3_bucket = S3Bucket.new(
-    objects.map { |object| S3Object.new(object[:path], object[:mtime]) }
+    objects.map { |object|
+      S3Object.new(object[:path], object[:mtime], object[:content])
+    }
   )
   it_should_behave_like "a data source", s3_bucket
 end
@@ -48,7 +58,7 @@ describe Filey::DataSources::FileSystem do
     fs_path = "#{@directory}/#{object[:path]}"
     FileUtils.mkdir_p(fs_path.scan(/(.*\/)/).first.first)
     File.open(fs_path, 'w') do |file|
-      file.write 'test'
+      file.write object[:content]
     end
   }
   it_should_behave_like "a data source", @directory

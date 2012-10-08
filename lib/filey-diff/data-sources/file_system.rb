@@ -1,3 +1,5 @@
+require 'digest/md5'
+
 module Filey
   module DataSources
     class FileSystem < DataSource
@@ -14,7 +16,8 @@ module Filey
           path = file.scan(/(.*\/).*/).first.first.sub(@root_directory, '')
           name = file.scan(/.*\/(.*)/).first.first
           normalised_path = ".#{path}"
-          Filey.new(normalised_path, name, File.mtime(file))
+          md5 = Digest::MD5.hexdigest(File.read(file))
+          Filey.new(normalised_path, name, File.mtime(file), md5)
         }
       end
     end

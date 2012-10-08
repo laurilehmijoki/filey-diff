@@ -2,10 +2,16 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 describe Filey::Comparison do
   before {
-    @scifi = Filey::Filey.new('./', 'scifi.txt', Time.now)
-    @deep_space = Filey::Filey.new('./', 'abandoned.txt', Time.now)
-    @outdated_file_object = Filey::Filey.new('./', 'foo.txt', Time.now - 10)
-    @latest_file_object = Filey::Filey.new('./', 'foo.txt', Time.now)
+    @scifi = Filey::Filey.new('./', 'scifi.txt', Time.now,
+                              '9cdfb439c7876e703e307864c9167a15')
+    @scifi_changed = Filey::Filey.new('./', 'scifi.txt', Time.now,
+                              '9cdfb439c7876e703e307864c9167DDD')
+    @deep_space = Filey::Filey.new('./', 'abandoned.txt', Time.now,
+                                   '9cdfb439c7876e703e307864c9167a15')
+    @outdated_file_object = Filey::Filey.new('./', 'foo.txt', Time.now - 10,
+                                             '9cdfb439c7876e703e307864c9167a15')
+    @latest_file_object = Filey::Filey.new('./', 'foo.txt', Time.now,
+                                           '9cdfb439c7876e703e307864c9167a15')
   }
 
   context 'finding outdated files' do
@@ -39,4 +45,33 @@ describe Filey::Comparison do
       @missing_file_objects.length.should be(1)
     end
   end
+
+  context 'finding changed files' do
+    before {
+      data_source_a = DataSource.new([ @scifi ])
+      data_source_b = DataSource.new([ @scifi_changed ])
+      @changed_files = Filey::Comparison.list_changed(data_source_a, data_source_b)
+    }
+
+    it 'compares filey md5 hashes' do
+      @changed_files.should include(@scifi_changed)
+    end
+
+    it 'compares filey md5 hashes' do
+      @changed_files.length.should be(1)
+    end
+
+    context 'same md5 hashes' do
+      before {
+        data_source_a = DataSource.new([ @scifi ])
+        data_source_b = DataSource.new([ @scifi ])
+        @changed_files = Filey::Comparison.list_changed(data_source_a, data_source_b)
+      }
+
+      it 'notices when the md5 hashes are same' do
+        @changed_files.length.should be(0)
+      end
+    end
+  end
+
 end
