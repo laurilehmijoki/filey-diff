@@ -1,11 +1,13 @@
 module Filey
   module DataSources
-    class AwsSdkS3
+    class AwsSdkS3 < DataSource
       def initialize(s3_bucket)
         @s3_bucket = s3_bucket
       end
 
-      def get_fileys
+      private
+
+      def do_internal_load
         @s3_bucket.objects.map { |s3_object|
           if (s3_object.key.include?'/')
             path = s3_object.key.scan(/(.*\/).*/).first.first

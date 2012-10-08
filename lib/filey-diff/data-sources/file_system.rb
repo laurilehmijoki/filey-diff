@@ -1,11 +1,13 @@
 module Filey
   module DataSources
-    class FileSystem
+    class FileSystem < DataSource
       def initialize(root_directory)
         @root_directory = root_directory
       end
 
-      def get_fileys
+      private
+
+      def do_internal_load
         Dir.glob(@root_directory + '/**/*').select { |file|
           File.file?(file)
         }.map { |file|
