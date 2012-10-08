@@ -29,6 +29,11 @@ Given two data sources A and B, list the changed files that A has but B doesn't.
 
 Given two data sources A and B, list the files that A has but B doesn't.
 
+### List changed files
+
+Given two data sources A and B, list the files on A that have a different MD5
+hash than the corresponding file on B.
+
 ## Example use cases
 
 Arnie has a blog on AWS S3. He has just finished a new post and wants to upload
