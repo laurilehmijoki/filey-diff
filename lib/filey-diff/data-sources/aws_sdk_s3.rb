@@ -7,9 +7,14 @@ module Filey
 
       def get_fileys
         @s3_bucket.objects.map { |s3_object|
-          path = s3_object.key.scan(/(.*\/).*/).first.first
-          name = s3_object.key.scan(/.*\/(.*)/).first.first
-          normalised_path = ".#{path}"
+          if (s3_object.key.include?'/')
+            path = s3_object.key.scan(/(.*\/).*/).first.first
+            name = s3_object.key.scan(/.*\/(.*)/).first.first
+          else
+            path = ''
+            name = s3_object.key
+          end
+          normalised_path = "./#{path}"
           Filey.new(normalised_path, name, s3_object.last_modified)
         }
       end

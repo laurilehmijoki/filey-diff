@@ -29,9 +29,9 @@ shared_examples "a data source" do |source|
 end
 
 objects = [
-  { :path => '/cameron/80s/aliens.txt', :mtime => Time.now },
-  { :path => '/cameron/90s/t2.txt', :mtime => Time.now },
-  { :path => '/movies.txt', :mtime => Time.now }
+  { :path => 'cameron/80s/aliens.txt', :mtime => Time.now },
+  { :path => 'cameron/90s/t2.txt', :mtime => Time.now },
+  { :path => 'movies.txt', :mtime => Time.now }
 ]
 
 describe Filey::DataSources::AwsSdkS3 do
@@ -45,7 +45,7 @@ describe Filey::DataSources::FileSystem do
   require 'tmpdir'
   @directory = Dir.mktmpdir
   objects.each { |object|
-    fs_path = @directory + object[:path]
+    fs_path = "#{@directory}/#{object[:path]}"
     FileUtils.mkdir_p(fs_path.scan(/(.*\/)/).first.first)
     File.open(fs_path, 'w') do |file|
       file.write 'test'
