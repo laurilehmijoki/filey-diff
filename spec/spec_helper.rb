@@ -1,3 +1,4 @@
+require 'rubygems'
 require 'rspec'
 require 'digest/md5'
 require File.dirname(__FILE__) + '/../lib/filey-diff'
