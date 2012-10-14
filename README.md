@@ -44,10 +44,22 @@ Filey::Comparison.list_changed(fs_data_source, s3_data_source).each { |filey|
 
 Given two data sources A and B, list the files that A has but B doesn't.
 
+```ruby
+Filey::Comparison.list_missing(fs_data_source, s3_data_source).each { |filey|
+  puts "File #{filey.full_path} is missing from S3"
+}
+```
+
 ### List changed files
 
 Given two data sources A and B, list the files on A that have a different MD5
 hash than the corresponding file on B.
+
+```ruby
+Filey::Comparison.list_outdated(fs_data_source, s3_data_source).each { |filey|
+  puts "File #{filey.full_path} is newer on local file system than on S3"
+}
+```
 
 ## Example use cases
 
