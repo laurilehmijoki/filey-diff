@@ -25,6 +25,21 @@ system.
 
 Given two data sources A and B, list the changed files that A has but B doesn't.
 
+```ruby
+require 'aws-sdk'
+require 'filey-diff'
+
+s3 = AWS::S3.new(:access_key_id => 'some-id',
+                 :secret_access_key => 'some-secret')
+s3_bucket = s3.buckets['your-s3-bucket-name']
+
+s3_data_source = Filey::DataSources::AwsSdkS3.new(s3_bucket)
+fs_data_source = Filey::DataSources::FileSystem.new('/tmp/site-root')
+Filey::Comparison.list_changed(fs_data_source, s3_data_source).each { |filey|
+  puts "File #{filey.full_path} has different contents on local file system than on S3"
+}
+```
+
 ### List missing files
 
 Given two data sources A and B, list the files that A has but B doesn't.
