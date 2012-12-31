@@ -26,6 +26,12 @@ shared_examples "a data source" do |source|
     filey.name.should eq('movies.txt')
   end
 
+  it 'supports dotfiles' do
+    filey = data_source.get_fileys.sort[3]
+    filey.path.should eq('./unix/')
+    filey.name.should eq('.dotfile')
+  end
+
   it 'normalises the objects into Fileys' do
     data_source.get_fileys.each { |file_object|
       file_object.should be_an_instance_of(Filey::Filey)
@@ -39,7 +45,9 @@ objects = [
   { :path => 'cameron/90s/t2.txt', :mtime => Time.now,
     :content => 't1000' },
   { :path => 'movies.txt', :mtime => Time.now,
-    :content => 'foo' }
+    :content => 'foo' },
+  { :path => 'unix/.dotfile', :mtime => Time.now,
+    :content => 'I am a dotfile' }
 ]
 
 describe Filey::DataSources::AwsSdkS3 do
