@@ -71,11 +71,21 @@ describe Filey::Filey do
   end
 
   context 'md5 validation' do
-    it 'raises an error if the md5 hash is not valid' do
+    it 'raises an error if the md5 hash shorter than 32 characters' do
       expect {
         Filey::Filey.new('./ripley/', 'aliens.txt', Time.now,
-                       'i-am-not-a-valid-md5-hash')
+                         'ca022be4a1c56c770b9700df99473d0')
       }.to raise_error(Filey::Filey::InvalidMd5Error)
+    end
+
+    it 'accepts md5s longer than 31' do
+        Filey::Filey.new('./ripley/', 'aliens.txt', Time.now,
+                         'ca022be4a1c56c770b9700df99473d01')
+    end
+
+    it 'accepts md5s longer than 31' do
+        Filey::Filey.new('./ripley/', 'aliens.txt', Time.now,
+                         'f392c1602cd1d9a0176853c41b366db5-5')
     end
   end
 end
