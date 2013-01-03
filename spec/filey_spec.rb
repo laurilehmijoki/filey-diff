@@ -78,7 +78,7 @@ describe Filey::Filey do
       }.to raise_error(Filey::Filey::InvalidMd5Error)
     end
 
-    it 'accepts md5s longer than 31' do
+    it 'accepts md5s of length 32' do
         Filey::Filey.new('./ripley/', 'aliens.txt', Time.now,
                          'ca022be4a1c56c770b9700df99473d01')
     end
