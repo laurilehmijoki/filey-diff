@@ -6,7 +6,7 @@ module Filey
       raise InvalidPathError unless path.match(/^\..*\/$/)
       raise InvalidTimeError unless last_modified.instance_of?(Time)
       raise InvalidNameError if     name.match(/\//)
-      raise InvalidMd5Error  unless md5.length >= 32
+      raise InvalidMd5Error  unless md5.length == 32
       @path = path
       @name = name
       @last_modified = last_modified
