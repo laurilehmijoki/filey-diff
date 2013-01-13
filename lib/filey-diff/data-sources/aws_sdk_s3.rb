@@ -20,7 +20,7 @@ module Filey
           Filey.new(normalised_path,
                     name,
                     s3_object.last_modified,
-                    s3_object.etag.gsub(/"/, ''))
+                    s3_object.etag.gsub(/"/, '').split('-',2).first)
         }
       end
     end
