@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.2
+
+* Remove the -number suffix from S3 ETags ([thanks
+  postmodern!](https://github.com/laurilehmijoki/filey-diff/pull/2))
+
 ## 1.0.1
 
 * Support S3 etags that are longer than 32 characters
