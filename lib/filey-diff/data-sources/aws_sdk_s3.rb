@@ -25,6 +25,7 @@ module Filey
             gz = Zlib::GzipReader.open(tempfile.path)
             last_modified = gz.mtime
             md5 = Digest::MD5.hexdigest(gz.read)
+            gz.close
           else
             last_modified = s3_object.last_modified
             md5 = s3_object.etag.gsub(/"/, '').split('-',2).first
