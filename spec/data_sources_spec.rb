@@ -1,5 +1,6 @@
 require File.dirname(__FILE__) + '/spec_helper'
 require 'tempfile'
+require 'zlib'
 
 shared_examples "a data source" do |source|
   let(:data_source) { described_class.new(source) }
