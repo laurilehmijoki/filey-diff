@@ -18,14 +18,8 @@ module Filey
           end
 
           if (s3_object.head[:content_encoding] == "gzip")
-            tempfile = Tempfile.new(File.basename(path))
-            tempfile.write s3_object.read
-            tempfile.close
-
-            gz = Zlib::GzipReader.open(tempfile.path)
-            last_modified = gz.mtime
-            md5 = Digest::MD5.hexdigest(gz.read)
-            gz.close
+            last_modified, md5 =
+              last_modified_and_md5_from_gzipped(s3_object, path)
           else
             last_modified = s3_object.last_modified
             md5 = s3_object.etag.gsub(/"/, '').split('-',2).first
@@ -37,6 +31,18 @@ module Filey
                     last_modified,
                     md5)
         }
+      end
+
+      def last_modified_and_md5_from_gzipped(s3_object, path)
+        tempfile = Tempfile.new(File.basename(path))
+        tempfile.write s3_object.read
+        tempfile.close
+
+        gz = Zlib::GzipReader.open(tempfile.path)
+        last_modified = gz.mtime
+        md5 = Digest::MD5.hexdigest(gz.read)
+        gz.close
+        [last_modified, md5]
       end
     end
   end
