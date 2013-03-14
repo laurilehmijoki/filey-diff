@@ -1,5 +1,13 @@
 # Changelog
 
+This project is [Semantically Versioned](http://semver.org).
+
+## 1.1.0
+
+* Add support for gzipped S3 objects
+
+  Thanks to Alex Marchant for implementing this!
+
 ## 1.0.2
 
 * Remove the -number suffix from S3 ETags ([thanks
