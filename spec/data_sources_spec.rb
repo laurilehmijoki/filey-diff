@@ -64,7 +64,7 @@ describe Filey::DataSources::AwsSdkS3 do
     original_object = objects.first
     tempfile = Tempfile.new("temp")
     
-    gz = Zlib::GzipWriter.open(tempfile, Zlib::BEST_COMPRESSION, Zlib::DEFAULT_STRATEGY)
+    gz = Zlib::GzipWriter.open(tempfile.path, Zlib::BEST_COMPRESSION, Zlib::DEFAULT_STRATEGY)
     gz.mtime = original_object[:mtime]
     gz.write original_object[:content]
 
