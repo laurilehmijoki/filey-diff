@@ -4,16 +4,21 @@ require 'digest/md5'
 require File.dirname(__FILE__) + '/../lib/filey-diff'
 
 class S3Object
-  attr_reader :key, :last_modified
+  attr_reader :key, :last_modified, :head
 
-  def initialize(key, last_modified, content)
+  def initialize(key, last_modified, content, head = {})
     @key = key
     @last_modified = last_modified
     @content = content
+    @head = head
   end
 
   def etag
     Digest::MD5.hexdigest(@content)
+  end
+
+  def read
+    @content
   end
 end
 

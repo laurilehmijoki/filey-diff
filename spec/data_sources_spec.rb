@@ -1,4 +1,6 @@
 require File.dirname(__FILE__) + '/spec_helper'
+require 'tempfile'
+require 'zlib'
 
 shared_examples "a data source" do |source|
   let(:data_source) { described_class.new(source) }
@@ -57,6 +59,34 @@ describe Filey::DataSources::AwsSdkS3 do
     }
   )
   it_should_behave_like "a data source", s3_bucket
+
+  it 'provides the original md5/mtime of a gzipped file' do
+    original_object = objects.first
+    tempfile = Tempfile.new("temp")
+    
+    gz = Zlib::GzipWriter.open(tempfile.path, Zlib::BEST_COMPRESSION, Zlib::DEFAULT_STRATEGY)
+    gz.mtime = original_object[:mtime]
+    gz.write original_object[:content]
+
+    gz.flush
+    tempfile.flush
+
+    gz.close
+    tempfile.open
+
+    data_source = Filey::DataSources::AwsSdkS3.new( S3Bucket.new( [ S3Object.new(
+        original_object[:path],
+        tempfile.mtime,
+        tempfile.read,
+        {:content_encoding => 'gzip'}
+    )]))
+    filey = data_source.get_fileys[0]
+
+    filey.md5.should eq(Digest::MD5.hexdigest(original_object[:content]))
+    # GzipWriter seems to cut off fractions of a second, 
+    # to_i adjusts the original file to match
+    filey.last_modified.to_i.should eq(original_object[:mtime].to_i)   
+  end
 end
 
 describe Filey::DataSources::FileSystem do

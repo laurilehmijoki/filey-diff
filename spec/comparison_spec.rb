@@ -73,5 +73,4 @@ describe Filey::Comparison do
       end
     end
   end
-
 end
