@@ -61,40 +61,68 @@ describe Filey::DataSources::AwsSdkS3 do
 
   it_should_behave_like "a data source", s3_bucket
 
-  it 'provides the original md5/mtime of a gzipped file' do
-    original_object = objects.first
-    tempfile = gzip_into_tmp_file(original_object)
-    data_source = s3_data_source_from_file(tempfile, original_object[:path])
-    filey = data_source.get_fileys[0]
+  context 'gzip' do
+    let(:gzip_tempfile_and_path) {
+      original_object = objects.first
+      [
+        gzip_into_tmp_file(original_object[:content], original_object[:mtime]),
+        original_object[:path]
+      ]
+    }
 
-    filey.md5.should eq(Digest::MD5.hexdigest(original_object[:content]))
-    # GzipWriter seems to cut off fractions of a second,
-    # to_i adjusts the original file to match
-    filey.last_modified.to_i.should eq(original_object[:mtime].to_i)
-  end
+    let(:data_source_with_one_gzipped_object) {
+      file, path = gzip_tempfile_and_path
+      file.open
+      data_source = Filey::DataSources::AwsSdkS3.new(S3Bucket.new([S3Object.new(
+        path,
+        file.mtime,
+        file.read,
+        { :content_encoding => 'gzip' }
+      )]))
+    }
 
-  def s3_data_source_from_file(file, path)
-    file.open
-    data_source = Filey::DataSources::AwsSdkS3.new(S3Bucket.new([S3Object.new(
-      path,
-      file.mtime,
-      file.read,
-      { :content_encoding => 'gzip' }
-    )]))
-  end
+    it 'provides the original md5/mtime of a gzipped file' do
+      filey = data_source_with_one_gzipped_object.get_fileys[0]
+      filey.md5.should eq(Digest::MD5.hexdigest(objects.first[:content]))
+      # GzipWriter seems to cut off fractions of a second,
+      # to_i adjusts the original file to match
+      filey.last_modified.to_i.should eq(objects.first[:mtime].to_i)
+    end
 
-  def gzip_into_tmp_file(s3_mock_object)
-    tempfile = Tempfile.new("temp")
+    context 'working with Ruby 2.0.0 automatic decoding of gzipped HTTP responses' do
+      let(:data_source_with_decoded_object_and_gzip_header) {
+        data_source = Filey::DataSources::AwsSdkS3.new(S3Bucket.new([S3Object.new(
+          objects.first[:path],
+          objects.first[:mtime],
+          objects.first[:content],
+          { :content_encoding => 'gzip' }
+        )]))
+      }
 
-    gz = Zlib::GzipWriter.open(tempfile.path, Zlib::BEST_COMPRESSION, Zlib::DEFAULT_STRATEGY)
-    gz.mtime = s3_mock_object[:mtime]
-    gz.write s3_mock_object[:content]
+      it 'detects the case where the gzipped data has already been decoded' do
+        filey = data_source_with_decoded_object_and_gzip_header.get_fileys.first
+        filey.last_modified.should eq(objects.first[:mtime])
+      end
 
-    gz.flush
-    tempfile.flush
+      it 'returns the md5 of the gzip-decoded content' do
+        filey = data_source_with_decoded_object_and_gzip_header.get_fileys.first
+        filey.md5.should eq(Digest::MD5.hexdigest(objects.first[:content]))
+      end
+    end
 
-    gz.close
-    tempfile
+    def gzip_into_tmp_file(content, mtime)
+      tempfile = Tempfile.new("temp")
+
+      gz = Zlib::GzipWriter.open(tempfile.path, Zlib::BEST_COMPRESSION, Zlib::DEFAULT_STRATEGY)
+      gz.mtime = mtime
+      gz.write content
+
+      gz.flush
+      tempfile.flush
+
+      gz.close
+      tempfile
+    end
   end
 end
 
