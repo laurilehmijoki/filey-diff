@@ -58,6 +58,7 @@ describe Filey::DataSources::AwsSdkS3 do
       S3Object.new(object[:path], object[:mtime], object[:content])
     }
   )
+
   it_should_behave_like "a data source", s3_bucket
 
   it 'provides the original md5/mtime of a gzipped file' do
@@ -102,10 +103,12 @@ describe Filey::DataSources::FileSystem do
   @directory = Dir.mktmpdir
   objects.each { |object|
     fs_path = "#{@directory}/#{object[:path]}"
-    FileUtils.mkdir_p(fs_path.scan(/(.*\/)/).first.first)
+    directory = fs_path.scan(/(.*\/)/).first.first
+    FileUtils.mkdir_p directory
     File.open(fs_path, 'w') do |file|
       file.write object[:content]
     end
   }
+
   it_should_behave_like "a data source", @directory
 end
