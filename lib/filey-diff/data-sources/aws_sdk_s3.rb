@@ -8,31 +8,40 @@ module Filey
       private
 
       def do_internal_load
-        @s3_bucket.objects.map { |s3_object|
-          if (s3_object.key.include?'/')
-            path = s3_object.key.scan(/(.*\/).*/).first.first
-            name = s3_object.key.scan(/.*\/(.*)/).first.first
-          else
-            path = ''
-            name = s3_object.key
-          end
-
-          if (s3_object.head[:content_encoding] == "gzip")
-            last_modified, md5 = last_modified_and_md5_from_gzipped(
-              s3_object, path
-            )
-          else
-            last_modified, md5 = last_modified_and_md5(s3_object)
-          end
-
-          normalised_path = "./#{path}"
-          Filey.new(
-            normalised_path,
-            name,
-            last_modified,
-            md5
-          )
+        fileys = []
+        threads = @s3_bucket.objects.map { |s3_object|
+          Thread.new(s3_object) {
+            fileys << map_s3_object_to_filey(s3_object)
+          }
         }
+        threads.each { |thread| thread.join }
+        fileys
+      end
+
+      def map_s3_object_to_filey(s3_object)
+        if (s3_object.key.include?'/')
+          path = s3_object.key.scan(/(.*\/).*/).first.first
+          name = s3_object.key.scan(/.*\/(.*)/).first.first
+        else
+          path = ''
+          name = s3_object.key
+        end
+
+        if (s3_object.head[:content_encoding] == "gzip")
+          last_modified, md5 = last_modified_and_md5_from_gzipped(
+            s3_object, path
+          )
+        else
+          last_modified, md5 = last_modified_and_md5(s3_object)
+        end
+
+        normalised_path = "./#{path}"
+        Filey.new(
+          normalised_path,
+          name,
+          last_modified,
+          md5
+        )
       end
 
       def last_modified_and_md5(s3_object)

@@ -2,6 +2,10 @@
 
 This project is [Semantically Versioned](http://semver.org).
 
+## 1.2.0
+
+* Improve performance by loading S3 objects in parallel
+
 ## 1.1.2
 
 * Co-operate with Ruby 2.0.0 automatic gzip decoding
