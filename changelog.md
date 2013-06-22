@@ -2,6 +2,10 @@
 
 This project is [Semantically Versioned](http://semver.org).
 
+## 1.2.1
+
+* Allow disabling of parallel processing with `ENV['disable_parallel_processing'] = 'true'`
+
 ## 1.2.0
 
 * Improve performance by loading S3 objects in parallel

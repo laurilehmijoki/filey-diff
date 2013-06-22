@@ -9,13 +9,26 @@ module Filey
 
       def do_internal_load
         fileys = []
-        threads = @s3_bucket.objects.map { |s3_object|
-          Thread.new(s3_object) {
-            fileys << map_s3_object_to_filey(s3_object)
-          }
+        map_to_filey = lambda { |s3_object|
+          fileys << map_s3_object_to_filey(s3_object)
         }
-        threads.each { |thread| thread.join }
+        in_parallel_or_sequentially map_to_filey
         fileys
+      end
+
+      def in_parallel_or_sequentially(map_to_filey)
+        if ENV['disable_parallel_processing']
+          @s3_bucket.objects.each do |s3_object|
+            map_to_filey.call s3_object
+          end
+        else
+          threads = @s3_bucket.objects.map { |s3_object|
+            Thread.new(s3_object) {
+              map_to_filey.call s3_object
+            }
+          }
+          threads.each { |thread| thread.join }
+        end
       end
 
       def map_s3_object_to_filey(s3_object)
