@@ -16,10 +16,10 @@ module Filey
         fileys
       end
 
-      def in_parallel_or_sequentially(map_to_filey)
+      def in_parallel_or_sequentially(operation)
         jobs = @s3_bucket.objects.map { |s3_object|
           lambda {
-            map_to_filey.call s3_object
+            operation.call s3_object
           }
         }
         if ENV['disable_parallel_processing']
