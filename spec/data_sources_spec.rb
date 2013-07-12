@@ -61,21 +61,19 @@ describe Filey::DataSources::AwsSdkS3 do
 
   it_should_behave_like "a data source", s3_bucket
 
-  context "ENV['disable_parallel_processing']" do
-    describe 'when parallelism is disabled' do
-      before(:each) {
-        @disable_parallel_processing_before = ENV['disable_parallel_processing']
-        ENV['disable_parallel_processing'] = 'true'
-      }
+  context 'when parallelism is disabled' do
+    before(:each) {
+      @disable_parallel_processing_before = ENV['disable_parallel_processing']
+      ENV['disable_parallel_processing'] = 'true'
+    }
 
-      after(:each) {
-        unless @disable_parallel_processing_before == nil
-          ENV['disable_parallel_processing'] = @disable_parallel_processing_before
-        end
-      }
+    after(:each) {
+      unless @disable_parallel_processing_before == nil
+        ENV['disable_parallel_processing'] = @disable_parallel_processing_before
+      end
+    }
 
-      it_should_behave_like "a data source", s3_bucket
-    end
+    it_should_behave_like "a data source", s3_bucket
   end
 
   context 'gzip' do
