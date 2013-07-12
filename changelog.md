@@ -2,6 +2,10 @@
 
 This project is [Semantically Versioned](http://semver.org).
 
+## 1.2.3
+
+* Mention the license in the gemspec file
+
 ## 1.2.2
 
 * AwsSdkS3 data source: load S3 objects in slices of 100 when concurrency is

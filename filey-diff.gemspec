@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name              = 'filey-diff'
-  s.version           = '1.2.2'
+  s.version           = '1.2.3'
 
   s.summary     = "Compare two data sources that contain file-like objects"
   s.description =
@@ -12,6 +12,7 @@ Gem::Specification.new do |s|
   s.authors  = ["Lauri Lehmijoki"]
   s.email    = 'lauri.lehmijoki@iki.fi'
   s.homepage = 'http://github.com/laurilehmijoki/filey-diff'
+  s.license  = 'Apache 2.0'
 
   s.require_paths = %w[lib]
   s.files         = `git ls-files`.split("\n")
