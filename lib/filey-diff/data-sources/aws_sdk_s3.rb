@@ -7,6 +7,8 @@ module Filey
 
       private
 
+      DEFAULT_CONCURRENCY_LEVEL = 100
+
       def do_internal_load
         fileys = []
         map_to_filey = lambda { |s3_object|
@@ -16,16 +18,16 @@ module Filey
         fileys
       end
 
-      def in_parallel_or_sequentially(operation)
+      def in_parallel_or_sequentially(operation_on_s3_object)
         jobs = @s3_bucket.objects.map { |s3_object|
           lambda {
-            operation.call s3_object
+            operation_on_s3_object.call s3_object
           }
         }
         if ENV['disable_parallel_processing']
           jobs.each(&:call)
         else
-          jobs.each_slice(100) { |jobs|
+          jobs.each_slice(DEFAULT_CONCURRENCY_LEVEL) { |jobs|
             threads = jobs.map { |job|
               Thread.new {
                 job.call

@@ -2,6 +2,10 @@
 
 This project is [Semantically Versioned](http://semver.org).
 
+## 1.2.4
+
+* Prepare for future development by refactoring the concurrency implementation.
+
 ## 1.2.3
 
 * Mention the license in the gemspec file

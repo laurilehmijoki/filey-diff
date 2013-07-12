@@ -76,6 +76,31 @@ describe Filey::DataSources::AwsSdkS3 do
     it_should_behave_like "a data source", s3_bucket
   end
 
+  context '#in_parallel_or_sequentially' do
+    describe Filey::DataSources::AwsSdkS3::DEFAULT_CONCURRENCY_LEVEL do
+      concurrency_level = Filey::DataSources::AwsSdkS3::DEFAULT_CONCURRENCY_LEVEL
+
+      before(:each) {
+        @ints = []
+        operation_on_s3_object = lambda do |s3_object|
+          @ints << s3_object
+        end
+        s3_bucket = double('s3_bucket', :objects => (1..(concurrency_level * 2)).map do |int| int end)
+        data_source = Filey::DataSources::AwsSdkS3.new(s3_bucket)
+        data_source.send(:in_parallel_or_sequentially, operation_on_s3_object)
+      }
+
+      it "does at most #{concurrency_level} ops in parallel" do
+        @ints.take(concurrency_level).all? { |int|
+          int <= concurrency_level
+        }.should be true
+        @ints.drop(concurrency_level).take(concurrency_level).all? { |int|
+          int > concurrency_level
+        }.should be true
+      end
+    end
+  end
+
   context 'gzip' do
     let(:gzip_tempfile_and_path) {
       original_object = objects.first
