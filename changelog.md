@@ -2,6 +2,11 @@
 
 This project is [Semantically Versioned](http://semver.org).
 
+## 1.2.2
+
+* AwsSdkS3 data source: load S3 objects in slices of 100 when concurrency is
+  enabled
+
 ## 1.2.1
 
 * Allow disabling of parallel processing with `ENV['disable_parallel_processing'] = 'true'`

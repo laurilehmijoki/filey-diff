@@ -17,17 +17,22 @@ module Filey
       end
 
       def in_parallel_or_sequentially(map_to_filey)
-        if ENV['disable_parallel_processing']
-          @s3_bucket.objects.each do |s3_object|
+        jobs = @s3_bucket.objects.map { |s3_object|
+          lambda {
             map_to_filey.call s3_object
-          end
-        else
-          threads = @s3_bucket.objects.map { |s3_object|
-            Thread.new(s3_object) {
-              map_to_filey.call s3_object
-            }
           }
-          threads.each { |thread| thread.join }
+        }
+        if ENV['disable_parallel_processing']
+          jobs.each(&:call)
+        else
+          jobs.each_slice(100) { |jobs|
+            threads = jobs.map { |job|
+              Thread.new {
+                job.call
+              }
+            }
+            threads.each(&:join)
+          }
         end
       end
 

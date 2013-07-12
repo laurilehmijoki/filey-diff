@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name              = 'filey-diff'
-  s.version           = '1.2.1'
+  s.version           = '1.2.2'
 
   s.summary     = "Compare two data sources that contain file-like objects"
   s.description =
