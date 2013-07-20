@@ -61,6 +61,18 @@ Filey::Comparison.list_outdated(fs_data_source, s3_data_source).each { |filey|
 }
 ```
 
+## AWS SDK data source
+
+### Specifing custom concurrency level
+
+The concurrency level determines the amount of parallel operations that the
+`AwsSdkS3` data source performs against the S3 API.
+
+```ruby
+config = { :concurrency_level => 1000 }
+s3_data_source = Filey::DataSources::AwsSdkS3.new(s3_bucket, config)
+```
+
 ## Example use cases
 
 Arnie has a blog on AWS S3. He has just finished a new post and wants to upload

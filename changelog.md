@@ -2,6 +2,10 @@
 
 This project is [Semantically Versioned](http://semver.org).
 
+## 1.3.0
+
+* Support custom concurrency level in AwsSdkS3
+
 ## 1.2.4
 
 * Prepare for future development by refactoring the concurrency implementation.

@@ -1,8 +1,9 @@
 module Filey
   module DataSources
     class AwsSdkS3 < DataSource
-      def initialize(s3_bucket)
+      def initialize(s3_bucket, config = { :concurrency_level => DEFAULT_CONCURRENCY_LEVEL })
         @s3_bucket = s3_bucket
+        @config = config
       end
 
       private
@@ -27,7 +28,7 @@ module Filey
         if ENV['disable_parallel_processing']
           jobs.each(&:call)
         else
-          jobs.each_slice(DEFAULT_CONCURRENCY_LEVEL) { |jobs|
+          jobs.each_slice(slice_size) { |jobs|
             threads = jobs.map { |job|
               Thread.new {
                 job.call
@@ -36,6 +37,11 @@ module Filey
             threads.each(&:join)
           }
         end
+      end
+
+      def slice_size
+        slice_size_from_cfg = @config[:concurrency_level] || @config['concurrency_level']
+        slice_size_from_cfg || DEFAULT_CONCURRENCY_LEVEL
       end
 
       def map_s3_object_to_filey(s3_object)

@@ -77,27 +77,54 @@ describe Filey::DataSources::AwsSdkS3 do
   end
 
   context '#in_parallel_or_sequentially' do
-    describe Filey::DataSources::AwsSdkS3::DEFAULT_CONCURRENCY_LEVEL do
-      concurrency_level = Filey::DataSources::AwsSdkS3::DEFAULT_CONCURRENCY_LEVEL
 
-      before(:each) {
+    shared_examples 'concurrent processing' do |concurrency_level, config|
+      let(:operation_on_s3_object) {
         @ints = []
         operation_on_s3_object = lambda do |s3_object|
           @ints << s3_object
         end
-        s3_bucket = double('s3_bucket', :objects => (1..(concurrency_level * 2)).map do |int| int end)
-        data_source = Filey::DataSources::AwsSdkS3.new(s3_bucket)
+      }
+
+      before(:each) {
+        s3_bucket = double(
+          's3_bucket',
+          :objects => (0..200).map { |int| int }
+      )
+        data_source = Filey::DataSources::AwsSdkS3.new(s3_bucket, config)
         data_source.send(:in_parallel_or_sequentially, operation_on_s3_object)
       }
 
-      it "does at most #{concurrency_level} ops in parallel" do
+      it "honors the concurrency level by processing the first #{concurrency_level} items first" do
         @ints.take(concurrency_level).all? { |int|
           int <= concurrency_level
         }.should be true
+      end
+
+      it "honors the concurrency level by processing the second patch of #{concurrency_level} items second" do
         @ints.drop(concurrency_level).take(concurrency_level).all? { |int|
-          int > concurrency_level
+          int >= concurrency_level && int < (2 * concurrency_level)
         }.should be true
       end
+    end
+
+    describe 'default concurrency level' do
+      concurrency_level = Filey::DataSources::AwsSdkS3::DEFAULT_CONCURRENCY_LEVEL
+
+      include_examples(
+        'concurrent processing',
+        concurrency_level,
+        nil
+      )
+    end
+
+    describe 'specifying custom concurrency level' do
+      concurrency_level = 20
+      include_examples(
+        'concurrent processing',
+        concurrency_level,
+        { :concurrency_level => concurrency_level }
+      )
     end
   end
 
