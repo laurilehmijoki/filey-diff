@@ -41,7 +41,7 @@ module Filey
 
       def slice_size
         slice_size_from_cfg = @config[:concurrency_level] || @config['concurrency_level']
-        slice_size_from_cfg || DEFAULT_CONCURRENCY_LEVEL
+        slice_size_from_cfg || DEFAULT_CONCURRENCY_LEVEL
       end
 
       def map_s3_object_to_filey(s3_object)

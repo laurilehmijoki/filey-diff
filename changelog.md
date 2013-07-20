@@ -2,6 +2,10 @@
 
 This project is [Semantically Versioned](http://semver.org).
 
+## 1.3.1
+
+* Remove a non-printable char
+
 ## 1.3.0
 
 * Support custom concurrency level in AwsSdkS3
