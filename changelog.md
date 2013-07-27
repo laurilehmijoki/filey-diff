@@ -2,6 +2,11 @@
 
 This project is [Semantically Versioned](http://semver.org).
 
+## 1.4.0
+
+* If `DataSource.new` receives a block, call the block upon every new `Filey`
+  that the data source generates
+
 ## 1.3.1
 
 * Remove a non-printable char

@@ -39,6 +39,18 @@ shared_examples "a data source" do |source|
       file_object.should be_an_instance_of(Filey::Filey)
     }
   end
+
+  context '#initialize' do
+    it 'takes a block and dispatches every new filey to the block' do
+      called_upon_fileys = []
+      data_source = described_class.new(source) { |filey|
+        called_upon_fileys << filey
+      }
+      resulting_fileys = data_source.get_fileys
+      called_upon_fileys.empty?.should be(false)
+      resulting_fileys.should eq(called_upon_fileys)
+    end
+  end
 end
 
 objects = [

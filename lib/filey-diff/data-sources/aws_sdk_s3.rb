@@ -1,9 +1,10 @@
 module Filey
   module DataSources
     class AwsSdkS3 < DataSource
-      def initialize(s3_bucket, config = { :concurrency_level => DEFAULT_CONCURRENCY_LEVEL })
+      def initialize(s3_bucket, config = { :concurrency_level => DEFAULT_CONCURRENCY_LEVEL }, &block)
         @s3_bucket = s3_bucket
         @config = config
+        @when_filey_loaded = lambda { |filey| block.call filey } if block
       end
 
       private
@@ -62,12 +63,14 @@ module Filey
         end
 
         normalised_path = "./#{path}"
-        Filey.new(
+        filey = Filey.new(
           normalised_path,
           name,
           last_modified,
           md5
         )
+        @when_filey_loaded.call(filey) if @when_filey_loaded
+        filey
       end
 
       def last_modified_and_md5(s3_object)
