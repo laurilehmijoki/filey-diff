@@ -17,7 +17,7 @@ module Filey
           path = file.scan(/(.*\/).*/).first.first.sub(@root_directory, '')
           name = file.scan(/.*\/(.*)/).first.first
           normalised_path = ".#{path}"
-          md5 = Digest::MD5.hexdigest(File.read(file))
+          md5 = Digest::MD5.hexdigest(File.open(file, "rb") { |f| f.read })
           filey = Filey.new(normalised_path, name, File.mtime(file), md5)
           @when_filey_loaded.call(filey) if @when_filey_loaded
           filey
