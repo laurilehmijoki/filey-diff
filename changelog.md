@@ -2,6 +2,14 @@
 
 This project is [Semantically Versioned](http://semver.org).
 
+## 1.4.1
+
+* Fix diff for Windows users
+
+  See
+  <https://github.com/laurilehmijoki/s3_website/issues/8#issuecomment-23683568>
+  for discussion.
+
 ## 1.4.0
 
 * If `DataSource.new` receives a block, call the block upon every new `Filey`
