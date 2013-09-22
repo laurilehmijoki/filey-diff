@@ -2,6 +2,14 @@
 
 This project is [Semantically Versioned](http://semver.org).
 
+## 1.4.2
+
+* Decrease the default concurrency level to 3
+
+  See
+  https://github.com/laurilehmijoki/s3_website/issues/8#issuecomment-24855991
+  for discussion.
+
 ## 1.4.1
 
 * Fix diff for Windows users

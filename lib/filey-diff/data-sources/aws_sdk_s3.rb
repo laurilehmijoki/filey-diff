@@ -9,7 +9,7 @@ module Filey
 
       private
 
-      DEFAULT_CONCURRENCY_LEVEL = 100
+      DEFAULT_CONCURRENCY_LEVEL = 3
 
       def do_internal_load
         fileys = []
