@@ -86,6 +86,7 @@ module Filey
           [s3_object.last_modified, md5]
         else
           tempfile = Tempfile.new(File.basename(path))
+          tempfile.binmode
           tempfile.write s3_object_contents
           tempfile.close
 
