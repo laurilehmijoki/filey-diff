@@ -2,6 +2,10 @@
 
 This project is [Semantically Versioned](http://semver.org).
 
+## 1.4.3
+
+* Fix issue <https://github.com/laurilehmijoki/filey-diff/pull/8>
+
 ## 1.4.2
 
 * Decrease the default concurrency level to 3
