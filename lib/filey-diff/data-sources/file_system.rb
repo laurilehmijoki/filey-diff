@@ -16,6 +16,10 @@ module Filey
         }.map { |file|
           path = file.scan(/(.*\/).*/).first.first.sub(@root_directory, '')
           name = file.scan(/.*\/(.*)/).first.first
+          if RUBY_PLATFORM =~ /darwin/
+            path = path.force_encoding('UTF8-MAC').encode('UTF-8')
+            name = name.force_encoding('UTF8-MAC').encode('UTF-8')
+          end
           normalised_path = ".#{path}"
           md5 = Digest::MD5.hexdigest(File.open(file, "rb") { |f| f.read })
           filey = Filey.new(normalised_path, name, File.mtime(file), md5)
