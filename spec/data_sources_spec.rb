@@ -218,4 +218,12 @@ describe Filey::DataSources::FileSystem do
   }
 
   it_should_behave_like "a data source", @directory
+
+  describe 'utf8-mac support' do
+    it 'supports Japanese filenames properly' do
+      fs_data_source = Filey::DataSources::FileSystem.new('spec/sample_files/japanese_files/*')
+      puts fs_data_source.send(:do_internal_load).map(&:name)
+      fail # TODO implement this test properly.
+    end
+  end
 end
