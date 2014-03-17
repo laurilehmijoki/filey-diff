@@ -15,8 +15,14 @@ Gem::Specification.new do |s|
   s.license  = 'Apache 2.0'
 
   s.require_paths = %w[lib]
-  s.files         = `git ls-files`.split("\n")
-  s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
+  s.files         = `git ls-files`.
+                      split("\n").
+                      # The test files contain UTF8-MAC encoded files. Reject them, as they break the
+                      # `rake release` command when run on an UTF8 OS X.
+                      reject { |x| x =~ /.*spec.*japanese_files.*/ }
+  s.test_files    = `git ls-files -- {test,spec,features}/*`.
+                      split("\n").
+                      reject { |x| x =~ /.*spec.*japanese_files.*/ }
 
   s.add_development_dependency 'rake', "~> 0.9"
   s.add_development_dependency 'rspec', "~> 2.11"
