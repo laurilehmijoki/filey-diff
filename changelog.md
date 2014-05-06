@@ -2,6 +2,14 @@
 
 This project is [Semantically Versioned](http://semver.org).
 
+## 2.0.0
+
+* Improve performance significantly (see https://github.com/laurilehmijoki/s3_website/issues/44)
+
+#### Non-backwards compatible changes:
+* Calculate MD5 of gzipped S3 object using its gzipped content
+  (previously MD5 was always calculated using raw, non-gzipped file content).
+
 ## 1.4.3
 
 * Fix issue <https://github.com/laurilehmijoki/filey-diff/pull/8>

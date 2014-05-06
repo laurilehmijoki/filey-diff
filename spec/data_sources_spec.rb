@@ -160,33 +160,13 @@ describe Filey::DataSources::AwsSdkS3 do
       )]))
     }
 
-    it 'provides the original md5/mtime of a gzipped file' do
+    it 'provides the md5/mtime of a gzipped file' do
       filey = data_source_with_one_gzipped_object.get_fileys[0]
-      filey.md5.should eq(Digest::MD5.hexdigest(objects.first[:content]))
+      gzipped_content = IO.binread(gzip_tempfile_and_path[0])
+      filey.md5.should eq(Digest::MD5.hexdigest(gzipped_content))
       # GzipWriter seems to cut off fractions of a second,
       # to_i adjusts the original file to match
       filey.last_modified.to_i.should eq(objects.first[:mtime].to_i)
-    end
-
-    context 'working with Ruby 2.0.0 automatic decoding of gzipped HTTP responses' do
-      let(:data_source_with_decoded_object_and_gzip_header) {
-        data_source = Filey::DataSources::AwsSdkS3.new(S3Bucket.new([S3Object.new(
-          objects.first[:path],
-          objects.first[:mtime],
-          objects.first[:content],
-          { :content_encoding => 'gzip' }
-        )]))
-      }
-
-      it 'detects the case where the gzipped data has already been decoded' do
-        filey = data_source_with_decoded_object_and_gzip_header.get_fileys.first
-        filey.last_modified.should eq(objects.first[:mtime])
-      end
-
-      it 'returns the md5 of the gzip-decoded content' do
-        filey = data_source_with_decoded_object_and_gzip_header.get_fileys.first
-        filey.md5.should eq(Digest::MD5.hexdigest(objects.first[:content]))
-      end
     end
 
     def gzip_into_tmp_file(content, mtime)
