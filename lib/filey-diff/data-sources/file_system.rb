@@ -11,7 +11,7 @@ module Filey
       private
 
       def do_internal_load
-        Dir.glob(@root_directory + '/**/{*,.*}', File::FNM_DOTMATCH).select { |file|
+        Dir.glob(@root_directory + '/**{,/*/**}/{*,.*}', File::FNM_DOTMATCH).select { |file|
           File.file?(file)
         }.map { |file|
           path = file.scan(/(.*\/).*/).first.first.sub(@root_directory, '')
